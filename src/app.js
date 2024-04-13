@@ -86,3 +86,5 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); //Persistent login sessions
 app.use(morganMiddleware);
+
+export { httpServer };
