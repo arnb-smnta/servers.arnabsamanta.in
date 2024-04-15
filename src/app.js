@@ -19,7 +19,7 @@ import path from "path";
 import requestIp from "request-ip";
 
 import { Server } from "socket.io";
-import morganMiddleware from "./loggers/morgan.logger";
+import morganMiddleware from "./loggers/morgan.logger.js";
 
 const app = express();
 const httpServer = createServer(app);

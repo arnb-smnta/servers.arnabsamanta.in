@@ -4,7 +4,7 @@ log details about each incoming HTTP request to the console.
  server's behavior, especially in production environments. */
 
 import morgan from "morgan";
-import logger from "./winston.logger";
+import logger from "./winston.logger.js";
 const stream = {
   //use the http severity
   write: (message) => logger.http(message.trim()),

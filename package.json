@@ -2,6 +2,7 @@
   "name": "server.arnabsamanta.in",
   "version": "1.0.0",
   "description": "A collection of all the major Type of Software API's",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

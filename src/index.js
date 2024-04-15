@@ -1,10 +1,5 @@
-import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import { httpServer } from "./app.js";
-
-dotenv.config({
-  path: "./.env",
-});
 
 const majorNodeVersion = +process.env.NODE_VERSION?.split(".")[0] || 0;
 
