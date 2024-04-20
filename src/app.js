@@ -20,6 +20,7 @@ import requestIp from "request-ip";
 
 import { Server } from "socket.io";
 import morganMiddleware from "./loggers/morgan.logger.js";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -86,5 +87,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); //Persistent login sessions
 app.use(morganMiddleware);
-
+//Common error handling middleware
+app.use(errorHandler);
 export { httpServer };
