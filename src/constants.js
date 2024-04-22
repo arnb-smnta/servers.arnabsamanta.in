@@ -3,6 +3,11 @@ export const UserRolesEnum = {
   USER: "USER",
 };
 
+export const TypeOfGroupsEnum = {
+  ADMINSONLY: "ADMINSONLY",
+  NORMALGROUPCHAT: "NORMALGROUPCHAT",
+};
+export const AvailableGroupTypes = Object.values(TypeOfGroupsEnum);
 export const AvailableUserRoles = Object.values(UserRolesEnum);
 export const DB_NAME = "servers/arnabsamanta/in";
 export const USER_TEMPORARY_TOKEN_EXPIRY = 20 * 60 * 1000; // 20 minutes
