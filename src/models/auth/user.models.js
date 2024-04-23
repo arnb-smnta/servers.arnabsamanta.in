@@ -1,7 +1,9 @@
 import { Schema } from "mongoose";
 import {
+  AvailableSocialLogins,
   AvailableUserRoles,
   USER_TEMPORARY_TOKEN_EXPIRY,
+  UserLoginType,
   UserRolesEnum,
 } from "../../constants";
 import bcrypt from "bcrypt";

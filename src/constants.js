@@ -7,6 +7,15 @@ export const TypeOfGroupsEnum = {
   ADMINSONLY: "ADMINSONLY",
   NORMALGROUPCHAT: "NORMALGROUPCHAT",
 };
+
+export const UserLoginType = {
+  GOOGLE: "GOOGLE",
+  GITHUB: "GITHUB",
+  EMAIL_PASSWORD: "EMAIL_PASSWORD",
+};
+
+export const AvailableSocialLogins = Object.values(UserLoginType);
+
 export const AvailableGroupTypes = Object.values(TypeOfGroupsEnum);
 export const AvailableUserRoles = Object.values(UserRolesEnum);
 export const DB_NAME = "servers/arnabsamanta/in";

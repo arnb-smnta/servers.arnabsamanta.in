@@ -1,4 +1,4 @@
-import { UserRolesEnum } from "../../constants";
+import { UserLoginType, UserRolesEnum } from "../../constants";
 import { User } from "../../models/auth/user.models.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
@@ -92,6 +92,82 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
+  if (!username || !email) {
+    throw new ApiError(400, "Username or email is required");
+  }
+
+  const user = await User.findone({
+    $or: [{ username }, { email }],
+  });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (user.loginType !== UserLoginType.EMAIL_PASSWORD) {
+    //If user is registered with any other type of login other than email he will have to login with that type of login only
+
+    throw new ApiError(
+      400,
+      `You have previously registered using
+  ${user.loginType.toLowerCase()} Please use the ${user.loginType.toLowerCase()} 
+  to access your account`
+    );
+  }
+
+  const isPasswordValid = await user.isPasswordValid(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid user details");
+  }
+
+  const { accessToken, refreshToken } = await generateAccessandRefreshToken(
+    user._id
+  );
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { user: loggedInUser, accessToken, refreshToken },
+        "User logged in succesfully"
+      )
+    );
+});
+
+const logoutUser = asyncHandler(async (req, res) => {
+  if (!req.user?._id) {
+    throw new ApiError(400, "Invalid request");
+  }
+
+  await User.findByIdAndUpdate(
+    req.user._id,
+    { $set: { refreshToken: undefined } },
+    { new: true }
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User looged out succesfully"));
 });
 
 const verifyEmail = asyncHandler(async (req, res) => {
@@ -123,4 +199,39 @@ const verifyEmail = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, { isEmailVerified: true }, "Email is verified"));
+});
+
+const resendEmailVerification = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(404, "USer does not found");
+  }
+
+  //If email is already verified throw an error
+
+  if (user.isEmailVerified) {
+    throw new ApiError(409, "Emai is already verified");
+  }
+  const { unHashedToken, hashedToken, tokenExpiry } =
+    user.generateTemporaryToken();
+
+  user.emailVerificationToken = hashedToken;
+  user.emailVerificationExpiry = tokenExpiry;
+  await user.save({ validateBeforeSave: false });
+
+  await sendEmail({
+    email: user?.email,
+    subject: "Please verify your email",
+    mailgenContent: emailVerificationContent(
+      user.username,
+      `${req.protocol}://${req.get(
+        "host"
+      )}/api/v1/users/verify-email/${unHashedToken}`
+    ),
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Mail has been sent to your mail ID"));
 });
