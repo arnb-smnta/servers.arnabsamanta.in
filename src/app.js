@@ -87,6 +87,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); //Persistent login sessions
 app.use(morganMiddleware);
+import userRouter from "./routes/auth/auth.routes.js";
+import chatRouter from "./routes/chat-app/chat.routes.js";
+import messageRouter from "./routes/chat-app/message.routes.js";
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/chat-app/chats", chatRouter);
+app.use("/api/v1/chat-app/messages", messageRouter);
 //Common error handling middleware
 app.use(errorHandler);
 export { httpServer };
