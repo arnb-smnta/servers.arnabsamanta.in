@@ -1,5 +1,5 @@
-import { AvailableUserRoles } from "../constants";
-import { ApiError } from "../utils/ApiError";
+import { AvailableUserRoles } from "../constants.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   const token =

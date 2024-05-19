@@ -16,9 +16,9 @@ import { verifyJWT } from "../../middlewares/auth.middleware.js";
 import {
   createAGroupChatValidator,
   updateGroupChatNameValidator,
-} from "../../../validators/apps/chat-app/chat.validators.js";
-import { mongoIdPathVariableValidator } from "../../../validators/common/mongodb.validators.js";
-import { validate } from "../../../validators/validate.js";
+} from "../../validators/apps/chat-app/chat.validator.js";
+import { mongoIdPathVariableValidator } from "../../validators/common/mongodb.validator.js";
+import { validate } from "../../validators/validate.js";
 
 const router = Router();
 

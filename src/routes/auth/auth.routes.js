@@ -1,6 +1,4 @@
 import { Router } from "express";
-import passport from "passport";
-
 import {
   assignRole,
   changeCurrentPassword,
@@ -20,7 +18,8 @@ import {
   verifyJWT,
   verifyPermission,
 } from "../../middlewares/auth.middleware.js";
-import "../../../passport/index.js"; // import the passport config
+import passport from "passport";
+("../../../passport/index.js"); // import the passport config
 import {
   userAssignRoleValidator,
   userChangeCurrentPasswordValidator,
@@ -28,10 +27,10 @@ import {
   userLoginValidator,
   userRegisterValidator,
   userResetForgottenPasswordValidator,
-} from "../../../validators/apps/auth/user.validators.js";
-import { validate } from "../../../validators/validate.js";
-import { upload } from "../../../middlewares/multer.middlewares.js";
-import { mongoIdPathVariableValidator } from "../../../validators/common/mongodb.validators.js";
+} from "../../validators/apps/auth/authorisation.validator.js";
+import { validate } from "../../validators/validate.js";
+import { upload } from "../../middlewares/multer.middleware.js";
+import { mongoIdPathVariableValidator } from "../../validators/common/mongodb.validator.js";
 import { UserRolesEnum } from "../../constants.js";
 
 const router = Router();

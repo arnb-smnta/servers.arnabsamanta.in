@@ -1,4 +1,4 @@
-import { UserLoginType, UserRolesEnum } from "../../constants";
+import { UserLoginType, UserRolesEnum } from "../../constants.js";
 import { User } from "../../models/auth/user.models.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
